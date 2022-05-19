@@ -1,4 +1,5 @@
 import React from "react"
+import axios from "axios"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 
@@ -9,7 +10,19 @@ const RegistrationForm = () => {
 		watch,
 		formState: { errors },
 	} = useForm()
-	const onSubmit = (data) => console.log(data)
+	const onSubmit = (data) => {
+		console.log(data)
+		try {
+			console.log(data)
+			const res = axios.post(
+				"http://localhost:5000/api/v1/auth/registration",
+				data
+			)
+			console.log(res)
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	return (
 		<>
@@ -45,7 +58,9 @@ const RegistrationForm = () => {
 					</div>
 					{/* last name */}
 					<div className='py-2'>
-						<label htmlFor='last_name' className='block text-sm'>Last Name</label>
+						<label htmlFor='last_name' className='block text-sm'>
+							Last Name
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='last_name'
@@ -67,7 +82,9 @@ const RegistrationForm = () => {
 					</div>
 					{/* username */}
 					<div className='py-2'>
-						<label htmlFor='username' className='block text-sm'>Username</label>
+						<label htmlFor='username' className='block text-sm'>
+							Username
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='username'
@@ -85,7 +102,9 @@ const RegistrationForm = () => {
 					</div>
 					{/* email */}
 					<div className='py-2'>
-						<label htmlFor='email' className='block text-sm'>Email</label>
+						<label htmlFor='email' className='block text-sm'>
+							Email
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='email'
@@ -107,7 +126,9 @@ const RegistrationForm = () => {
 					</div>
 					{/* password */}
 					<div className='py-2'>
-						<label htmlFor='password' className='block text-sm'>Password</label>
+						<label htmlFor='password' className='block text-sm'>
+							Password
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='password'
@@ -130,7 +151,9 @@ const RegistrationForm = () => {
 					</div>
 					{/* confirm password */}
 					<div className='py-2'>
-						<label htmlFor='password_confirmation' className='block text-sm'>Confirm Password</label>
+						<label htmlFor='password_confirmation' className='block text-sm'>
+							Confirm Password
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='password'
@@ -144,7 +167,7 @@ const RegistrationForm = () => {
 							})}
 						/>
 						<p className='w-full rounded px-1 mt-1 bg-red-400/50 text-xs'>
-							{errors.password?.message}
+							{errors.password_confirmation?.message}
 						</p>
 					</div>
 					<div className='w-full flex justify-center items-center'>

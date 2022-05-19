@@ -1,25 +1,53 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
+import axios from "axios"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
+import { useAuthContext } from "../context/Context"
 
 const ProfileUpdate = () => {
+	const { user, postUser ,user_id,deleteUser } = useAuthContext()
+	const [userData, setUserData] = useState(null)
 	const {
 		register,
 		handleSubmit,
-
 		formState: { errors },
 	} = useForm()
-	const onSubmit = (data) => console.log(data)
+
+	// fetch current user data
+	const fetch_data = async (id) => {
+		try {
+			const res = await axios.get(`http://localhost:5000/api/v1/get-user/${id}`)
+			setUserData(res.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	useEffect(() => {
+		if (user_id) {
+			fetch_data(user_id)
+		}
+	}, [user_id])
+
+	// delete user
+	const handleUserDelete = ()=>{
+		deleteUser(user_id,user)
+	}
+
+	// submit user
+	const onSubmit = (data) => {
+		data = { ...data, profile_pic: data.profile_pic[0], user_id: user_id }
+		postUser(data, user)
+	}
 	return (
 		<>
 			<div className='flex flex-col items-center m-2 w-full max-w-2xl sm:w-4/5 md:w-2/3 p-2 bg-white rounded border border-gray-300 '>
 				<div className='w-32 h-32 rounded-full '>
 					<img
 						className='w-32 h-32 rounded-full object-cover'
-						src='https://images.pexels.com/photos/4520283/pexels-photo-4520283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+						src={userData ? userData["profile_pic"] : ""}
 						alt='profile'
 					/>
-					
 				</div>
 
 				{/* link to public profile */}
@@ -32,9 +60,18 @@ const ProfileUpdate = () => {
 				{/* update details form */}
 				<form className='w-full py-2 ' onSubmit={handleSubmit(onSubmit)}>
 					{/* profile photo */}
-					<div className="py-2 px-1">
-						<label htmlFor="profile-pic" className="block text-sm">Update Profile Pic</label>
-						<input className="w-full border border-gray-200 rounded" type="file" />
+					<div className='py-2 px-1'>
+						<label htmlFor='profile_pic' className='block text-sm'>
+							Update Profile Pic
+						</label>
+						<input
+							className='w-full border border-gray-200 rounded'
+							type='file'
+							id='profile_pic'
+							name='profile_pic'
+							accept='image/*'
+							{...register("profile_pic")}
+						/>
 					</div>
 					{/* first and last name */}
 					<div className='w-full flex py-2'>
@@ -45,10 +82,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='first_name'
+								type='text'
 								placeholder='please enter your first name'
 								id='first_name'
 								name='first_name'
+								defaultValue={
+									userData ? userData["first_name"] : ""
+								}
 								{...register("first_name", {
 									required: "first name is required",
 									pattern: {
@@ -69,10 +109,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='last_name'
+								type='text'
 								placeholder='please enter your last name'
 								id='last_name'
 								name='last_name'
+								defaultValue={
+									userData ? userData["last_name"] : ""
+								}
 								{...register("last_name", {
 									required: "last name is required",
 									pattern: {
@@ -100,6 +143,9 @@ const ProfileUpdate = () => {
 								placeholder='please enter your email'
 								id='email'
 								name='email'
+								defaultValue={
+									userData ? userData["email"] : ""
+								}
 								{...register("email", {
 									required: "email is required",
 									pattern: {
@@ -120,10 +166,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='username'
+								type='text'
 								placeholder='please enter your username'
 								id='username'
 								name='username'
+								defaultValue={
+									userData ? userData["username"] : ""
+								}
 								{...register("username", {
 									required: "username is required",
 								})}
@@ -143,10 +192,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='job_title'
+								type='text'
 								placeholder='please enter your job title'
 								id='job_title'
 								name='job_title'
+								defaultValue={
+									userData ? userData["job_title"] : ""
+								}
 								{...register("job_title", {
 									required: "job title is required",
 								})}
@@ -163,10 +215,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='company'
+								type='text'
 								placeholder='please enter your company'
 								id='company'
 								name='company'
+								defaultValue={
+									userData ? userData["company"] : ""
+								}
 								{...register("company", {
 									required: "company is required",
 								})}
@@ -186,10 +241,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='linkedIn'
+								type='text'
 								placeholder='please enter your linkedIn username'
 								id='linkedIn'
 								name='linkedIn'
+								defaultValue={
+									userData ? userData["linkedIn_username"] : ""
+								}
 								{...register("linkedIn", {
 									required: "linkedIn username is required",
 								})}
@@ -206,10 +264,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='twitter'
+								type='text'
 								placeholder='please enter your twitter username'
 								id='twitter'
 								name='twitter'
+								defaultValue={
+									userData ? userData["twitter_username"] : ""
+								}
 								{...register("twitter", {
 									required: "twitter username is required",
 								})}
@@ -229,10 +290,13 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='github'
+								type='text'
 								placeholder='please enter your github username'
 								id='github'
 								name='github'
+								defaultValue={
+									userData ? userData["github_username"] : ""
+								}
 								{...register("github", {
 									required: "github username is required",
 								})}
@@ -249,15 +313,18 @@ const ProfileUpdate = () => {
 							</label>
 							<input
 								className='w-full border-b border-b-black  focus:outline-none'
-								type='website'
+								type='text'
 								placeholder='please enter your website'
 								id='website'
 								name='website'
+								defaultValue={
+									userData ? userData["website"] : ""
+								}
 								{...register("website", {
 									required: "website is required",
 									pattern: {
 										value:
-											/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/,
+											/[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/,
 										message: "Enter a valid url",
 									},
 								})}
@@ -274,7 +341,7 @@ const ProfileUpdate = () => {
 						</button>
 					</div>
 				</form>
-				<button className='w-full bg-red-500 py-1  mt-2 rounded flex items-center justify-center font-semibold hover:opacity-80'>
+				<button onClick={handleUserDelete} className='w-full bg-red-500 py-1  mt-2 rounded flex items-center justify-center font-semibold hover:opacity-80'>
 					Delete Profile
 				</button>
 			</div>

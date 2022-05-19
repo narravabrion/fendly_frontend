@@ -1,14 +1,21 @@
 import React from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
+import { useAuthContext } from "../context/Context"
 
 const LoginForm = () => {
+	const {login} = useAuthContext()
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm()
-	const onSubmit = (data) => console.log(data)
+
+
+	const onSubmit = (data) => {
+		// handleLogin(data)
+		login(data)
+	}
 
 	return (
 		<>
@@ -45,7 +52,9 @@ const LoginForm = () => {
 					</div>
 					{/* password */}
 					<div className='py-2'>
-						<label htmlFor='password' className='block text-sm'></label>
+						<label htmlFor='password' className='block text-sm'>
+							Password
+						</label>
 						<input
 							className='w-full border-b border-b-black py-1 focus:outline-none'
 							type='password'
