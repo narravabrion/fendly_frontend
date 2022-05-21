@@ -16,7 +16,7 @@ const ProfileUpdate = () => {
 	// fetch current user data
 	const fetch_data = async (id) => {
 		try {
-			const res = await axios.get(`http://localhost:5000/api/v1/get-user/${id}`)
+			const res = await axios.get(`https://fendly.herokuapp.com/api/v1/get-user/${id}`)
 			setUserData(res.data)
 		} catch (error) {
 			console.log(error)
@@ -37,7 +37,8 @@ const ProfileUpdate = () => {
 	// submit user
 	const onSubmit = (data) => {
 		data = { ...data, profile_pic: data.profile_pic[0], user_id: user_id }
-		postUser(data, user)
+		postUser(data, user,fetch_data)
+		
 	}
 	return (
 		<>
@@ -246,7 +247,7 @@ const ProfileUpdate = () => {
 								id='linkedIn'
 								name='linkedIn'
 								defaultValue={
-									userData ? userData["linkedIn_username"] : ""
+									userData ? userData["linkedin_username"] : ""
 								}
 								{...register("linkedIn", {
 									required: "linkedIn username is required",

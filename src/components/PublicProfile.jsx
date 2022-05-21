@@ -9,7 +9,7 @@ const PublicProfile = () => {
 	// console.log(user_id)
 	const fetch_data = async (id) => {
 		try {
-			const res = await axios.get(`http://localhost:5000/api/v1/get-user/${id}`)
+			const res = await axios.get(`https://fendly.herokuapp.com/api/v1/get-user/${id}`)
 			setData(res.data)
 		} catch (error) {
 			toast.error("Unable to fetch user data")

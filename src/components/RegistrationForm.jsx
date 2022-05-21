@@ -1,26 +1,27 @@
 import React from "react"
 import axios from "axios"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const RegistrationForm = () => {
+	const navigate = useNavigate()
 	const {
 		register,
 		handleSubmit,
 		watch,
 		formState: { errors },
 	} = useForm()
-	const onSubmit = (data) => {
-		console.log(data)
+	const onSubmit = async (data) => {
 		try {
-			console.log(data)
-			const res = axios.post(
-				"http://localhost:5000/api/v1/auth/registration",
+			 await axios.post(
+				"https://fendly.herokuapp.com/api/v1/auth/registration",
 				data
 			)
-			console.log(res)
+			toast.success("Successfully registered!")
+			navigate("/", { replace: true })
 		} catch (error) {
-			console.log(error)
+			toast.error("Registration failed!")
 		}
 	}
 
